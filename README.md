@@ -1,12 +1,35 @@
-An empty Haxe/Node.js project, to get started quickly.
+# Slambda
 
-A common first usage setup after cloning the repo:
+Pronounced "slam-da", stands for Short Lambda. I was tired of those long lambdas so here's a shorter version (including those long ones as well, if needed!)
 
+```haxe
+// Use both Lambda and Slambda for best effect.
+using Lambda;
+using Slambda;
+
+class Main {
+	static function main() {
+		var a : Dynamic;
+		
+		// Super-short version (parameter name autodetected)
+		a = [1, 2, 3].filter.fn(i > 1);
+		trace(a); // [2, 3]
+
+		// Normal version, with or without brackets
+		a = [1, 2, 3].filter.fn(x => x > 1);
+		trace(a); // [2, 3]
+
+		// Multiple arguments must use brackets
+		a = [1, 1, 1].mapi.fn([i, a] => i + a);
+		trace(a); // [1,2,3]
+
+		// Use fn1...fn4 for 1-4 rest arguments
+		a = [1, 1, 1].fold.fn1([i, a] => i + a, 10);
+		trace(a); // 13
+
+		// Chainable
+		a = [1, 2, 3].filter.fn(x > 1).filter.fn(y => y > 2);
+		trace(a); // [3]
+	}
+}
 ```
-renameproject slambda my-project-name
-npm install -g nodemon
-haxe my-project-name.hxml
-npm start
-```
-
-`renameproject.bat` which is used to rename the project uses `fnr.exe` which is a rather large .exe file, remove it if you don't need it. A nice contribution would be to make a Haxe file that does the same.
