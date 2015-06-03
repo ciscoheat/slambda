@@ -1,5 +1,6 @@
 -lib buddy
 -cp src 
+-cp tests
 -debug
 -main Main
 -neko bin/slambda.n
