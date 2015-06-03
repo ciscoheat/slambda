@@ -1,0 +1,10 @@
+{
+    "name": "slambda",
+    "url": "https://github.com/ciscoheat/slambda",
+    "description": "Really Short Lambdas",
+    "license": "MIT",
+    "releasenote": "Initial release",
+    "contributors": ["ciscoheat"],
+    "version": "0.0.1",
+    "tags": ["lambda"]
+}
