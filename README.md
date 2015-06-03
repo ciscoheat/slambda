@@ -35,3 +35,7 @@ class Main {
 	}
 }
 ```
+
+## Installation
+
+`haxelib git slambda https://github.com/ciscoheat/slambda.git master src`
