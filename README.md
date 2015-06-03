@@ -3,7 +3,7 @@ An empty Haxe/Node.js project, to get started quickly.
 A common first usage setup after cloning the repo:
 
 ```
-renameproject nodeproject my-project-name
+renameproject slambda my-project-name
 npm install -g nodemon
 haxe my-project-name.hxml
 npm start
