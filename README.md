@@ -3,8 +3,6 @@
 Pronounced "slam-da", stands for Short Lambda. I was tired of those long lambdas so here's a shorter version (including those long ones as well, if needed!)
 
 ```haxe
-// Use both Lambda and Slambda for best effect.
-using Lambda;
 using Slambda;
 
 class Main {
@@ -29,6 +27,10 @@ class Main {
 
 		// Chainable
 		a = [1, 2, 3].filter.fn(x > 1).filter.fn(y => y > 2);
+		trace(a); // [3]
+		
+		// And without "using"
+		a = Slambda.fn([1, 2, 3].filter, x > 2);
 		trace(a); // [3]
 	}
 }

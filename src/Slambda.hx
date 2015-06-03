@@ -3,6 +3,9 @@ import haxe.macro.Expr;
 
 using haxe.macro.ExprTools;
 
+// Auto-import Lambda
+typedef SlambdaLambda = Lambda;
+
 class Slambda
 {
 	public macro static function fn<T, T2>(fn : ExprOf<T -> T2>, exprs : Array<Expr>) {

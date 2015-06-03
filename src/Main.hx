@@ -1,7 +1,7 @@
 import buddy.*;
 using buddy.Should;
 
-using Lambda;
+import Slambda.fn;
 using Slambda;
 
 class Main implements Buddy<[Tests]> {}
@@ -47,13 +47,13 @@ class Tests extends BuddySuite
 				var a = [1, 2, 3, 4, 5, 6].filter.fn(x > 1).filter.fn(y => y > 2);
 				a.should.containExactly([3, 4, 5, 6]);
 				
-				var b = Slambda.fn(a.filter, z > 3);
+				var b = fn(a.filter, z > 3);
 				b.should.containExactly([4, 5, 6]);
 
-				var c = Slambda.fn(b.filter, p => p > 4);
+				var c = fn(b.filter, p => p > 4);
 				c.should.containExactly([5, 6]);
 
-				var d = Slambda.fn(c.filter, [q] => q > 5);
+				var d = fn(c.filter, [q] => q > 5);
 				d.should.containExactly([6]);
 			});
 		});
