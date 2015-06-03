@@ -30,10 +30,10 @@ class Slambda
 
 	static function f(fn : Expr, exprs : Array<Expr>, expectedRest : Int) {
 		if (exprs.length == 0) {
-			Context.error("No lambda expression specified for fn().", fn.pos);
+			untyped Context.error("No lambda expression specified for fn().", fn.pos);
 		}
 		else if (exprs.length-1 != expectedRest) {
-			Context.error('Invalid number of rest arguments, $expectedRest expected.', exprs[exprs.length - 1].pos);
+			untyped Context.error('Invalid number of rest arguments, $expectedRest expected.', exprs[exprs.length - 1].pos);
 		}
 
 		var restError = "Too many rest arguments, max 4 supported.";
@@ -44,7 +44,7 @@ class Slambda
 				var args = switch e1.expr {
 					case EConst(CIdent(v)): [v];
 					case EArrayDecl(values): [for (v in values) v.toString()];
-					case _: Context.error("Invalid lambda argument, use x => ... or [x,y] => ...", e1.pos);
+					case _: untyped Context.error("Invalid lambda argument, use x => ... or [x,y] => ...", e1.pos);
 				}
 				
 				return switch args.length {
@@ -56,7 +56,7 @@ class Slambda
 							case 2: macro $fn(function($a) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
 							case 4: macro $fn(function($a) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]}, ${exprs[3]});
-							case _: Context.error(restError, exprs[exprs.length - 1].pos);
+							case _: untyped Context.error(restError, exprs[exprs.length - 1].pos);
 						}
 					case 2:
 						var a = args[0], b = args[1];
@@ -66,7 +66,7 @@ class Slambda
 							case 2: macro $fn(function($a, $b) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a, $b) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
 							case 4: macro $fn(function($a, $b) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]}, ${exprs[3]});
-							case _: Context.error(restError, exprs[exprs.length - 1].pos);
+							case _: untyped Context.error(restError, exprs[exprs.length - 1].pos);
 						}
 					case 3:
 						var a = args[0], b = args[1], c = args[2];
@@ -76,7 +76,7 @@ class Slambda
 							case 2: macro $fn(function($a, $b, $c) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a, $b, $c) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
 							case 4: macro $fn(function($a, $b, $c) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]}, ${exprs[3]});
-							case _: Context.error(restError, exprs[exprs.length - 1].pos);
+							case _: untyped Context.error(restError, exprs[exprs.length - 1].pos);
 						}
 					case 4:
 						var a = args[0], b = args[1], c = args[2], d = args[3];
@@ -86,10 +86,10 @@ class Slambda
 							case 2: macro $fn(function($a, $b, $c, $d) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a, $b, $c, $d) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
 							case 4: macro $fn(function($a, $b, $c, $d) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]}, ${exprs[3]});
-							case _: Context.error(restError, exprs[exprs.length - 1].pos);
+							case _: untyped Context.error(restError, exprs[exprs.length - 1].pos);
 						}						
 					case _:
-						Context.error("Too many lambda arguments, max 4 supported.", e1.pos);
+						untyped Context.error("Too many lambda arguments, max 4 supported.", e1.pos);
 				}
 
 			// Special case, one-argument function short syntax: .fn(x > 1)
@@ -108,7 +108,7 @@ class Slambda
 					case 2: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]});
 					case 3: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
 					case 4: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]}, ${exprs[2]}, ${exprs[3]});
-					case _: Context.error(restError, exprs[exprs.length - 1].pos);
+					case _: untyped Context.error(restError, exprs[exprs.length - 1].pos);
 				}
 		}
 	}
