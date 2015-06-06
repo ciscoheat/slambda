@@ -112,8 +112,6 @@ private class SlambdaMacro
 				var a = null;
 
 				function findVar(e : Expr) switch e.expr {
-					case EField( { expr: EConst(CIdent(v)), pos: _ }, _) if (v != "this" && v != "null"): 
-						if(a == null) a = v;
 					case EConst(CIdent(v)) if (v != "this" && v != "null"): 
 						if(a == null) a = v;
 					case _: e.iter(findVar);
