@@ -44,15 +44,20 @@ class Slambda4
 private class SlambdaMacro
 {
 	public static function f(fn : Expr, exprs : Array<Expr>, expectedRest : Int) {
-		if (exprs.length == 0) {
-			untyped Context.error("No lambda expression specified for fn().", fn.pos);
-		}
-		else if (exprs.length-1 != expectedRest) {
+		// If called through an extension, "exprs" contains the lambda expression.
+		var extension = exprs != null && exprs.length > 0;
+
+		// If not an extension, move the lamba expr. to "exprs" for processing.
+		if (!extension) exprs = [fn];	
+		
+		if (exprs.length-1 != expectedRest)
 			untyped Context.error('Invalid number of rest arguments, $expectedRest expected.', exprs[exprs.length - 1].pos);
-		}
 
 		var restError = "Too many rest arguments, max 4 supported.";
 		var e = exprs.shift();
+
+		// If no rest arguments, test if the function was called as an extension, then apply the extension function.
+		function addExtension(e : Expr) return extension ? macro $fn($e) : e;
 		
 		switch e.expr {
 			case EBinop(OpArrow, e1, e2):
@@ -66,7 +71,7 @@ private class SlambdaMacro
 					case 1: 
 						var a = args[0];
 						switch exprs.length {
-							case 0: macro $fn(function($a) return $e2);
+							case 0: addExtension(macro function($a) return $e2);
 							case 1: macro $fn(function($a) return $e2, ${exprs[0]});
 							case 2: macro $fn(function($a) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
@@ -76,7 +81,7 @@ private class SlambdaMacro
 					case 2:
 						var a = args[0], b = args[1];
 						switch exprs.length {
-							case 0: macro $fn(function($a, $b) return $e2);
+							case 0: addExtension(macro function($a, $b) return $e2);
 							case 1: macro $fn(function($a, $b) return $e2, ${exprs[0]});
 							case 2: macro $fn(function($a, $b) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a, $b) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
@@ -86,7 +91,7 @@ private class SlambdaMacro
 					case 3:
 						var a = args[0], b = args[1], c = args[2];
 						switch exprs.length {
-							case 0: macro $fn(function($a, $b, $c) return $e2);
+							case 0: addExtension(macro function($a, $b, $c) return $e2);
 							case 1: macro $fn(function($a, $b, $c) return $e2, ${exprs[0]});
 							case 2: macro $fn(function($a, $b, $c) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a, $b, $c) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
@@ -96,7 +101,7 @@ private class SlambdaMacro
 					case 4:
 						var a = args[0], b = args[1], c = args[2], d = args[3];
 						switch exprs.length {
-							case 0: macro $fn(function($a, $b, $c, $d) return $e2);
+							case 0: addExtension(macro function($a, $b, $c, $d) return $e2);
 							case 1: macro $fn(function($a, $b, $c, $d) return $e2, ${exprs[0]});
 							case 2: macro $fn(function($a, $b, $c, $d) return $e2, ${exprs[0]}, ${exprs[1]});
 							case 3: macro $fn(function($a, $b, $c, $d) return $e2, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
@@ -112,8 +117,13 @@ private class SlambdaMacro
 				var a = null;
 
 				function findVar(e : Expr) switch e.expr {
+					case EField({expr: EConst(CIdent(v)), pos: _}, _): 
+						// Ignoring static fields (starts with an uppercase). Math, Date, etc...
+						if (a == null && v.charAt(0).toLowerCase() == v.charAt(0)) 
+							a = v;
 					case EConst(CIdent(v)) if (v != "this" && v != "null"): 
-						// Need to test for null in case e.iter loops through more EConst.
+						// Ignoring this and null as well.
+						// The a == null check is required in case e.iter loops through more EConst.
 						if(a == null) a = v;
 					case _: e.iter(findVar);
 				}
@@ -122,7 +132,7 @@ private class SlambdaMacro
 				if (a == null) a = "_";
 						
 				return switch exprs.length {
-					case 0: macro $fn(function($a) return $e);
+					case 0: addExtension(macro function($a) return $e);
 					case 1: macro $fn(function($a) return $e, ${exprs[0]});
 					case 2: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]});
 					case 3: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});

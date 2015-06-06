@@ -38,9 +38,20 @@ class Tests extends BuddySuite
 			it("should pass rest arguments as parameters to the original function", {
 				var a = [1, 1, 1].fold.fn([i, a] => i + a, 10);
 				a.should.be(13);
-
-				var b = Slambda1.fn([1, 1, 1].fold, [i, a] => i + a, 20);
+			});
+			
+			it("can be used without static extensions", {
+				var b = [1, 1, 1].fold(fn([i, a] => i + a), 20);
 				b.should.be(23);
+
+				var c = [1, 2, 3].map(fn(Math.pow(x, 2)));
+				c.should.containExactly([1, 4, 9]);
+
+				var d = [1, 2, 3].map(fn(x => Math.pow(x, 2)));
+				d.should.containExactly([1, 4, 9]);
+
+				var e = [1, 2, 3].filter(fn(i > 2));
+				e.should.containExactly([3]);
 			});
 
 			it("should work chained and without extension methods", {

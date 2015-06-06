@@ -28,10 +28,21 @@ class Main {
 		// Chainable
 		a = [1, 2, 3].filter.fn(x > 1).filter.fn(y => y > 2);
 		trace(a); // [3]
-		
-		// And without "using"
-		a = Slambda.fn([1, 2, 3].filter, x > 2);
-		trace(a); // [3]
+	}
+}
+```
+
+If you import `Slambda.fn`, you can use it without the static extension:
+
+```haxe
+import Slambda.fn;
+
+// Only Lambda this time for the sake of the example.
+using Lambda;
+
+class Main {
+	static function main() {
+		var a = [1, 2, 3].filter(fn(i > i));
 	}
 }
 ```
