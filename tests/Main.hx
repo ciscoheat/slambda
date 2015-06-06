@@ -28,12 +28,12 @@ class Tests extends BuddySuite
 				});
 			});
 
-			describe('two-argument functions', {
+			describe('two-argument functions and more', {
 				it("can only use arrow syntax with square brackets", {
 					var a = [1, 1, 1].mapi.fn([i, a] => i + a);
 					a.should.containExactly([1, 2, 3]);
 				});
-			});			
+			});
 			
 			it("should pass rest arguments as parameters to the original function", {
 				var a = [1, 1, 1].fold.fn([i, a] => i + a, 10);
@@ -55,6 +55,19 @@ class Tests extends BuddySuite
 
 				var d = fn(c.filter, [q] => q > 5);
 				d.should.containExactly([6]);
+			});
+
+			it("should have a natural understandable syntax", {
+				var persons = [
+					{name: "A", email: "a@example.com"},
+					{name: "B", email: null},
+					{name: "C", email: null},
+					{name: "D", email: "d@example.com"}
+				];
+
+				var emails = persons.filter.fn(person.email != null).map.fn(person.email);
+				
+				emails.should.containExactly(["a@example.com", "d@example.com"]);
 			});
 		});
 	}

@@ -109,14 +109,19 @@ private class SlambdaMacro
 
 			// Special case, one-argument function short syntax: .fn(x > 1)
 			case _:
-				var a = '_';
-				
+				var a = null;
+
 				function findVar(e : Expr) switch e.expr {
-					case EConst(CIdent(v)) if(v != "this"): a = v;
+					case EField( { expr: EConst(CIdent(v)), pos: _ }, _) if (v != "this" && v != "null"): 
+						if(a == null) a = v;
+					case EConst(CIdent(v)) if (v != "this" && v != "null"): 
+						if(a == null) a = v;
 					case _: e.iter(findVar);
 				}
-				e.iter(findVar);
 				
+				e.iter(findVar);
+				if (a == null) a = "_";
+						
 				return switch exprs.length {
 					case 0: macro $fn(function($a) return $e);
 					case 1: macro $fn(function($a) return $e, ${exprs[0]});
