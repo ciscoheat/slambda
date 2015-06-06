@@ -9,26 +9,41 @@ typedef SlambdaLambda = Lambda;
 class Slambda
 {
 	public macro static function fn<T, T2>(fn : ExprOf<T -> T2>, exprs : Array<Expr>) {
-		return f(fn, exprs, 0);
+		return SlambdaMacro.f(fn, exprs, 0);
 	}
+}
 
-	public macro static function fn1<T, T2, T3>(fn : ExprOf<T -> T2 -> T3>, exprs : Array<Expr>) {
-		return f(fn, exprs, 1);
+class Slambda1
+{
+	public macro static function fn<T, T2, T3>(fn : ExprOf<T -> T2 -> T3>, exprs : Array<Expr>) {
+		return SlambdaMacro.f(fn, exprs, 1);
 	}
+}
 
-	public macro static function fn2<T, T2, T3, T4>(fn : ExprOf<T -> T2 -> T3 -> T4>, exprs : Array<Expr>) {
-		return f(fn, exprs, 2);
+class Slambda2
+{
+	public macro static function fn<T, T2, T3, T4>(fn : ExprOf<T -> T2 -> T3 -> T4>, exprs : Array<Expr>) {
+		return SlambdaMacro.f(fn, exprs, 2);
 	}
+}
 
-	public macro static function fn3<T, T2, T3, T4, T5>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5>, exprs : Array<Expr>) {
-		return f(fn, exprs, 3);
+class Slambda3
+{
+	public macro static function fn<T, T2, T3, T4, T5>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5>, exprs : Array<Expr>) {
+		return SlambdaMacro.f(fn, exprs, 3);
 	}
+}
 
-	public macro static function fn4<T, T2, T3, T4, T5>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5>, exprs : Array<Expr>) {
-		return f(fn, exprs, 4);
-	}
+class Slambda4
+{
+	public macro static function fn<T, T2, T3, T4, T5>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5>, exprs : Array<Expr>) {
+		return SlambdaMacro.f(fn, exprs, 4);
+	}	
+}
 
-	static function f(fn : Expr, exprs : Array<Expr>, expectedRest : Int) {
+private class SlambdaMacro
+{
+	public static function f(fn : Expr, exprs : Array<Expr>, expectedRest : Int) {
 		if (exprs.length == 0) {
 			untyped Context.error("No lambda expression specified for fn().", fn.pos);
 		}

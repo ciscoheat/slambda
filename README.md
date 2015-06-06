@@ -21,8 +21,8 @@ class Main {
 		a = [1, 1, 1].mapi.fn([i, a] => i + a);
 		trace(a); // [1,2,3]
 
-		// Use fn1...fn4 for 1-4 rest arguments
-		a = [1, 1, 1].fold.fn1([i, a] => i + a, 10);
+		// Add 1-4 rest arguments for functions like fold
+		a = [1, 1, 1].fold.fn([i, a] => i + a, 10);
 		trace(a); // 13
 
 		// Chainable

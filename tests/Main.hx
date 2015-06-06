@@ -36,10 +36,10 @@ class Tests extends BuddySuite
 			});			
 			
 			it("should pass rest arguments as parameters to the original function", {
-				var a = [1, 1, 1].fold.fn1([i, a] => i + a, 10);
+				var a = [1, 1, 1].fold.fn([i, a] => i + a, 10);
 				a.should.be(13);
 
-				var b = Slambda.fn1([1, 1, 1].fold, [i, a] => i + a, 20);
+				var b = Slambda1.fn([1, 1, 1].fold, [i, a] => i + a, 20);
 				b.should.be(23);
 			});
 
