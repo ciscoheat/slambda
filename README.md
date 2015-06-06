@@ -36,6 +36,16 @@ class Main {
 }
 ```
 
+## Parameter autodetection?
+
+Yes, it looks for the first identifier in the construct and uses that one. It enables a natural syntax like
+
+```haxe
+var emails = persons.filter.fn(person.email != null).map.fn(person.email);
+```
+
+If you're doing complicated stuff and/or it seems to fail, use the normal `person => ...` syntax instead, or create an issue with the case so I can improve the detection.
+
 ## Installation
 
 `haxelib git slambda https://github.com/ciscoheat/slambda.git master src`

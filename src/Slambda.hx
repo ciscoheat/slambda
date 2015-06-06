@@ -113,6 +113,7 @@ private class SlambdaMacro
 
 				function findVar(e : Expr) switch e.expr {
 					case EConst(CIdent(v)) if (v != "this" && v != "null"): 
+						// Need to test for null in case e.iter loops through more EConst.
 						if(a == null) a = v;
 					case _: e.iter(findVar);
 				}
