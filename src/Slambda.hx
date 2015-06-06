@@ -97,7 +97,7 @@ class Slambda
 				var a = '_';
 				
 				function findVar(e : Expr) switch e.expr {
-					case EConst(CIdent(v)): a = v;
+					case EConst(CIdent(v)) if(v != "this"): a = v;
 					case _: e.iter(findVar);
 				}
 				e.iter(findVar);
