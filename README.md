@@ -42,7 +42,7 @@ using Lambda;
 
 class Main {
 	static function main() {
-		var a = [1, 2, 3].filter(fn(i > i));
+		var a = [1, 2, 3].filter(fn(i > 1));
 	}
 }
 ```
