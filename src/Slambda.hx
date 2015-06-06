@@ -3,7 +3,7 @@ import haxe.macro.Expr;
 
 using haxe.macro.ExprTools;
 
-// Auto-import Lambda
+// Auto-import Lambda when using Slambda
 typedef SlambdaLambda = Lambda;
 
 class Slambda
@@ -53,20 +53,50 @@ private class SlambdaMacro
 		if (exprs.length-1 != expectedRest)
 			untyped Context.error('Invalid number of rest arguments, $expectedRest expected.', exprs[exprs.length - 1].pos);
 
-		var restError = "Too many rest arguments, max 4 supported.";
-		var e = exprs.shift();
-
 		// If no rest arguments, test if the function was called as an extension, then apply the extension function.
 		function addExtension(e : Expr) return extension ? macro $fn($e) : e;
+
+		var restError = "Too many rest arguments, max 4 supported.";
+		var e = exprs.shift();
 		
 		switch e.expr {
+			case EBinop(OpArrow, _, _):
+			case _: 
+				// Detect underscore arguments
+				var params = new Map<String, Expr>();
+				function findParams(e : Expr) {
+					switch e.expr {
+						case EConst(CIdent(v)) if (v == "_" || v == "_1" || v == "_2" || v == "_3" || v == "_4"):
+							params.set(v, e);
+						case _:
+							e.iter(findParams);
+					}
+				}
+				e.iter(findParams);
+
+				var paramArray = [for (p in params) p];
+				
+				if (paramArray.length == 0) {				
+					untyped Context.error(
+						"No parameters found in lambda expression. Use _ for one parameter, _1 _2 for two, etc.", e.pos
+					);
+				}
+				else {					
+					paramArray.sort(function(x, y) return x.toString() > y.toString() ? 1 : 0);
+					e = macro $a{paramArray} => $e;
+				}
+		}
+
+		switch e.expr {
 			case EBinop(OpArrow, e1, e2):
+				// Extract lambda arguments [a,b] => ...
 				var args = switch e1.expr {
 					case EConst(CIdent(v)): [v];
 					case EArrayDecl(values): [for (v in values) v.toString()];
 					case _: untyped Context.error("Invalid lambda argument, use x => ... or [x,y] => ...", e1.pos);
 				}
 				
+				// Test how many lambda arguments, then how many rest arguments
 				return switch args.length {
 					case 1: 
 						var a = args[0];
@@ -111,34 +141,8 @@ private class SlambdaMacro
 					case _:
 						untyped Context.error("Too many lambda arguments, max 4 supported.", e1.pos);
 				}
-
-			// Special case, one-argument function short syntax: .fn(x > 1)
 			case _:
-				var a = null;
-
-				function findVar(e : Expr) switch e.expr {
-					case EField({expr: EConst(CIdent(v)), pos: _}, _): 
-						// Ignoring static fields (starts with an uppercase). Math, Date, etc...
-						if (a == null && v.charAt(0).toLowerCase() == v.charAt(0)) 
-							a = v;
-					case EConst(CIdent(v)) if (v != "this" && v != "null"): 
-						// Ignoring this and null as well.
-						// The a == null check is required in case e.iter loops through more EConst.
-						if(a == null) a = v;
-					case _: e.iter(findVar);
-				}
-				
-				e.iter(findVar);
-				if (a == null) a = "_";
-						
-				return switch exprs.length {
-					case 0: addExtension(macro function($a) return $e);
-					case 1: macro $fn(function($a) return $e, ${exprs[0]});
-					case 2: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]});
-					case 3: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]}, ${exprs[2]});
-					case 4: macro $fn(function($a) return $e, ${exprs[0]}, ${exprs[1]}, ${exprs[2]}, ${exprs[3]});
-					case _: untyped Context.error(restError, exprs[exprs.length - 1].pos);
-				}
+				return untyped Context.error("Lambda expression not in the form x => ...", e.pos);
 		}
 	}
 }

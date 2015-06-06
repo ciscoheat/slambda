@@ -12,8 +12,13 @@ class Tests extends BuddySuite
 		describe("Slambda", {
 			
 			describe('one-argument functions', {
-				it("can use a very compact syntax", {
-					var a = [1, 2, 3].filter.fn(i > 1);
+				it("can use a compact syntax with _ as parameter name", {
+					var a = [1, 2, 3].filter.fn(_ > 1);
+					a.should.containExactly([2, 3]);
+				});
+
+				it("can also use _1 instead of _ as parameter", {
+					var a = [1, 2, 3].filter.fn(_1 > 1);
 					a.should.containExactly([2, 3]);
 				});
 
@@ -29,36 +34,49 @@ class Tests extends BuddySuite
 			});
 
 			describe('two-argument functions and more', {
-				it("can only use arrow syntax with square brackets", {
+				it("can use _1 and _2 as parameter names", {
+					var a = [1, 1, 1].mapi.fn(_1 + _2);
+					a.should.containExactly([1, 2, 3]);
+				});
+
+				it("can use _1 and _2 as parameter names in any order", {
+					var a = ["1", "1", "1"].fold.fn(_2 + Std.parseInt(_1), 10);
+					a.should.be(13);
+				});
+
+				it("can use arrow syntax with square brackets", {
 					var a = [1, 1, 1].mapi.fn([i, a] => i + a);
 					a.should.containExactly([1, 2, 3]);
 				});
 			});
-			
+
 			it("should pass rest arguments as parameters to the original function", {
 				var a = [1, 1, 1].fold.fn([i, a] => i + a, 10);
 				a.should.be(13);
+				
+				var b = [1, 1, 1].fold.fn(_1 + _2, 10);
+				b.should.be(13);
 			});
 			
 			it("can be used without static extensions", {
 				var b = [1, 1, 1].fold(fn([i, a] => i + a), 20);
 				b.should.be(23);
 
-				var c = [1, 2, 3].map(fn(Math.pow(x, 2)));
+				var c = [1, 2, 3].map(fn(Math.pow(_, 2)));
 				c.should.containExactly([1, 4, 9]);
 
 				var d = [1, 2, 3].map(fn(x => Math.pow(x, 2)));
 				d.should.containExactly([1, 4, 9]);
 
-				var e = [1, 2, 3].filter(fn(i > 2));
+				var e = [1, 2, 3].filter(fn(_ > 2));
 				e.should.containExactly([3]);
 			});
 
 			it("should work chained and without extension methods", {
-				var a = [1, 2, 3, 4, 5, 6].filter.fn(x > 1).filter.fn(y => y > 2);
+				var a = [1, 2, 3, 4, 5, 6].filter.fn(_ > 1).filter.fn(y => y > 2);
 				a.should.containExactly([3, 4, 5, 6]);
 				
-				var b = fn(a.filter, z > 3);
+				var b = fn(a.filter, _ > 3);
 				b.should.containExactly([4, 5, 6]);
 
 				var c = fn(b.filter, p => p > 4);
@@ -68,7 +86,7 @@ class Tests extends BuddySuite
 				d.should.containExactly([6]);
 			});
 
-			it("should have a natural understandable syntax", {
+			it("should have a natural syntax", {
 				var persons = [
 					{name: "A", email: "a@example.com"},
 					{name: "B", email: null},
@@ -76,7 +94,7 @@ class Tests extends BuddySuite
 					{name: "D", email: "d@example.com"}
 				];
 
-				var emails = persons.filter.fn(person.email != null).map.fn(person.email);
+				var emails = persons.filter.fn(_.email != null).map.fn(_.email);
 				
 				emails.should.containExactly(["a@example.com", "d@example.com"]);
 			});
