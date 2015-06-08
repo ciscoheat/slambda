@@ -1,6 +1,6 @@
 # Slambda
 
-Pronounced "slam-da", stands for Short Lambda. A tiny library enabling lambda expressions for [Haxe](http://haxe.org), nothing else.
+Pronounced "slam-da", stands for Short Lambda. A tiny library that enables lambda expressions for [Haxe](http://haxe.org) in a simple way.
 
 Can be used with the common `=>` syntax, but also in a shorter format where `_` is assumed to be the first parameter. If more than one argument, use `_1` and `_2`, etc. Some examples:
 
