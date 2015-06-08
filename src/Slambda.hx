@@ -8,32 +8,32 @@ typedef SlambdaLambda = Lambda;
 
 class Slambda {
 	public macro static function fn<T, T2>(fn : ExprOf<T -> T2>, restArgs : Array<Expr>) 
-		return SlambdaMacro.f(fn, restArgs, 0);
+		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda1 {
 	public macro static function fn<T, T2, T3>(fn : ExprOf<T -> T2 -> T3>, restArgs : Array<Expr>) 
-		return SlambdaMacro.f(fn, restArgs, 1);
+		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda2 {
 	public macro static function fn<T, T2, T3, T4>(fn : ExprOf<T -> T2 -> T3 -> T4>, restArgs : Array<Expr>) 
-		return SlambdaMacro.f(fn, restArgs, 2);
+		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda3 {
 	public macro static function fn<T, T2, T3, T4, T5>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5>, restArgs : Array<Expr>) 
-		return SlambdaMacro.f(fn, restArgs, 3);
+		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda4 {
 	public macro static function fn<T, T2, T3, T4, T5, T6>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5 -> T6>, restArgs : Array<Expr>) 
-		return SlambdaMacro.f(fn, restArgs, 4);
+		return SlambdaMacro.f(fn, restArgs);
 }
 
 private class SlambdaMacro {
 	
-	public static function f(fn : Expr, restArgs : Array<Expr>, expectedRest : Int) {
+	public static function f(fn : Expr, restArgs : Array<Expr>) {
 		// If called through a static extension, fn contains the special "@:this this" expression:
 		// http://haxe.org/manual/macro-limitations-static-extension.html
 		var extension = fn.expr.match(EMeta({ name: ":this", params: _, pos: _ }, _));
