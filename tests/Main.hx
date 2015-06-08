@@ -57,6 +57,16 @@ class Tests extends BuddySuite
 				var b = [1, 1, 1].fold.fn(_1 + _2, 10);
 				b.should.be(13);
 			});
+
+			it("should create lambda expression with rest arguments if an underscore is detected", {
+				var attr = function(name : String, cb : String -> Int -> Dynamic) {
+					name.should.be("test");
+					cb("a", 1).should.be("a-1");
+				}
+				
+				attr.fn("test", _1 + "-" + _2);
+				attr.fn("test", [a,b] => a + "-" + b);
+			});
 			
 			it("can be used without static extensions", {
 				var b = [1, 1, 1].fold(fn([i, a] => i + a), 20);
@@ -76,13 +86,13 @@ class Tests extends BuddySuite
 				var a = [1, 2, 3, 4, 5, 6].filter.fn(_ > 1).filter.fn(y => y > 2);
 				a.should.containExactly([3, 4, 5, 6]);
 				
-				var b = fn(a.filter, _ > 3);
+				var b = a.filter(fn(_ > 3));
 				b.should.containExactly([4, 5, 6]);
 
-				var c = fn(b.filter, p => p > 4);
+				var c = b.filter(fn(p => p > 4));
 				c.should.containExactly([5, 6]);
 
-				var d = fn(c.filter, [q] => q > 5);
+				var d = c.filter(fn([q] => q > 5));
 				d.should.containExactly([6]);
 			});
 

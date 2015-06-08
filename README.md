@@ -1,8 +1,8 @@
 # Slambda
 
-Pronounced "slam-da", stands for Short Lambda. 
+Pronounced "slam-da", stands for Short Lambda. A tiny library enabling lambda expressions for [Haxe](http://haxe.org), nothing else.
 
-Uses a format where `_` is assumed to be the first parameter. If more than one argument, use `_1` and `_2`, etc.
+Can be used with the common `=>` syntax, but also in a shorter format where `_` is assumed to be the first parameter. If more than one argument, use `_1` and `_2`, etc. Some examples:
 
 ```haxe
 using Slambda;
@@ -28,7 +28,8 @@ class Main {
 		a = [1, 1, 1].mapi.fn([i, a] => i + a);
 		trace(a); // [1,2,3]
 
-		// Add 1-4 rest arguments for functions like fold
+		// When used as a static extension, add rest arguments
+		// for functions like fold:
 		a = [1, 1, 1].fold.fn(_1 + _2, 10);
 		trace(a); // 13
 
