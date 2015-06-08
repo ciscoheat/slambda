@@ -2,6 +2,7 @@ import buddy.*;
 using buddy.Should;
 
 import Slambda.fn;
+import utest.Assert;
 using Slambda;
 
 class Main implements Buddy<[Tests]> {}
@@ -80,6 +81,30 @@ class Tests extends BuddySuite
 
 				var e = [1, 2, 3].filter(fn(_ > 2));
 				e.should.containExactly([3]);
+
+				// Tests from thx.core/TestLambda
+				Assert.same([2,3], [1,2].map(fn(_+1)));
+
+				Assert.equals(0, fn((0))());
+				Assert.equals(2, fn((_0))(2));
+				Assert.equals(3, fn(_0+_1)(1,2));
+				Assert.equals(6, fn(_0+_1+_2)(1,2,3));
+				Assert.equals(10, fn(_0+_1+_2+_3)(1,2,3,4));
+				Assert.equals(15, fn(_0+_1+_2+_3+_4)(1,2,3,4,5));
+
+				Assert.equals(1, fn(Std.parseInt(_0))("1"));
+				Assert.equals(1, fn(Std.parseInt(_))("1"));
+				Assert.equals(1, fn(_0)(1));
+				Assert.equals(3, fn(_0+_1)(1,2));
+				Assert.equals(6, fn(_0+_1+_2)(1,2,3));
+				Assert.equals(10, fn(_0+_1+_2+_3)(1,2,3,4));
+				Assert.equals(15, fn(_0+_1+_2+_3+_4)(1,2,3,4,5));
+
+				Assert.equals(1, fn(_)(1));
+				Assert.equals(3, fn(_+_1)(1,2));
+				Assert.equals(6, fn(_+_1+_2)(1,2,3));
+				Assert.equals(10, fn(_+_1+_2+_3)(1,2,3,4));
+				Assert.equals(15, fn(_+_1+_2+_3+_4)(1,2,3,4,5));				
 			});
 
 			it("should work chained and without extension methods", {
@@ -107,7 +132,7 @@ class Tests extends BuddySuite
 				var emails = persons.filter.fn(_.email != null).map.fn(_.email);
 				
 				emails.should.containExactly(["a@example.com", "d@example.com"]);
-			});
+			});			
 		});
 	}
 }

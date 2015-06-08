@@ -36,33 +36,33 @@ private class SlambdaMacro {
 	public static function f(fn : Expr, restArgs : Array<Expr>) {
 		// If called through a static extension, fn contains the special "@:this this" expression:
 		// http://haxe.org/manual/macro-limitations-static-extension.html
-		var extension = fn.expr.match(EMeta({ name: ":this", params: _, pos: _ }, _));
+		var isExtension = fn.expr.match(EMeta({ name: ":this", params: _, pos: _}, {expr: EConst(CIdent("this")), pos: _}));
 
-		if (extension) return {expr: ECall(fn, restArgs.map(createLambdaFromArrowSyntax)), pos: fn.pos};
+		if (isExtension) return {expr: ECall(fn, restArgs.map(createLambdaExpression.bind(true))), pos: fn.pos};
 		
 		// If not an extension, return only fn. Rest arguments won't make sense here.
 		return restArgs.length == 0
-			? createLambdaFromArrowSyntax(fn)
+			? createLambdaExpression(false, fn)
 			: untyped Context.error('Rest arguments can only be used in static extensions.', restArgs[restArgs.length - 1].pos);
 	}
 
 	static var underscoreParam = ~/^_\d*$/;
-	static function createLambdaFromArrowSyntax(e : Expr) : Expr {
+	static function createLambdaExpression(isExtension : Bool, e : Expr) : Expr {
 
 		// If no arrow syntax, detect underscore parameters.
 		switch e.expr {
 			case EBinop(OpArrow, _, _):
 			case _: 
 				var params = new Map<String, Expr>();
-				function findParams(e : Expr) {
-					switch e.expr {
+				function findParams(e2 : Expr) {
+					switch e2.expr {
 						case EConst(CIdent(v)) if (underscoreParam.match(v)):
-							params.set(v, e);
+							params.set(v, e2);
 						case _:
-							e.iter(findParams);
+							e2.iter(findParams);
 					}
 				}
-				e.iter(findParams);
+				findParams(e);
 
 				var paramArray = [for (p in params) p];
 				if (paramArray.length > 0) {
@@ -72,7 +72,7 @@ private class SlambdaMacro {
 					e = macro $a{paramArray} => $e;
 				}
 		}
-		
+
 		return switch e.expr {
 			case EBinop(OpArrow, e1, e2):
 				// Extract lambda arguments [a,b] => ...
@@ -87,12 +87,14 @@ private class SlambdaMacro {
 						ret: null,
 						params: [],
 						expr: macro return $e2,
-						args: [for(arg in lambdaArgs) {	name: arg, type: null, opt: false }]
+						args: [for(arg in lambdaArgs) { name: arg, type: null, opt: false }]
 					}),
 					pos: e.pos
 				};
 
-			case _: e;
+			// If not an extension, it should return a non-lambda expression as a Void -> T function
+			// to stay consistent with fn("x") <-> function() return "x".
+			case _: isExtension ? e : macro function() return $e;
 		}
 	}
 }
