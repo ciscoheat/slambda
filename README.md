@@ -2,9 +2,12 @@
 
 Pronounced "slam-da", stands for Short Lambda. A tiny library that enables lambda expressions for [Haxe](http://haxe.org) in a simple way.
 
-Can be used with the common `=>` syntax, but also in a shorter format where `_` is assumed to be the first parameter. If more than one argument, use `_1` and `_2`, etc. Some examples:
+Can be used with the common `=>` syntax, but also in a shorter format where `_` is assumed to be the first parameter. If more than one argument, use `_1` and `_2`, etc.
 
+## Examples
+	
 ```haxe
+// This line is all you need to enable the library:
 using Slambda;
 
 class Main {
@@ -57,6 +60,4 @@ class Main {
 
 ## Installation
 
-`haxelib git slambda https://github.com/ciscoheat/slambda.git master src` 
-	
-Then use it in a `hxml` file with `-lib slambda`.
+`haxelib install slambda`, then use it in a `hxml` file with `-lib slambda`.
