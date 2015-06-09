@@ -7,26 +7,48 @@ using haxe.macro.ExprTools;
 typedef SlambdaLambda = Lambda;
 
 class Slambda {
+	/**
+	 * Lambda expressions! Syntax: 
+	 * a.filter.fn(_ > 1)
+	 * a.filter.fn(x => x > 1)
+	 */
 	public macro static function fn<T, T2>(fn : ExprOf<T -> T2>, restArgs : Array<Expr>) 
 		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda1 {
+	/**
+	 * Lambda expressions! Syntax: 
+	 * a.fold.fn(_1 + _2, 10)
+	 * a.fold.fn([a,b] => a + b, 10)
+	 */
 	public macro static function fn<T, T2, T3>(fn : ExprOf<T -> T2 -> T3>, restArgs : Array<Expr>) 
 		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda2 {
+	/**
+	 * Lambda expressions! Syntax: 
+	 * a.yourfunc.fn("arg1", "arg2", _ != 0)
+	 */
 	public macro static function fn<T, T2, T3, T4>(fn : ExprOf<T -> T2 -> T3 -> T4>, restArgs : Array<Expr>) 
 		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda3 {
+	/**
+	 * Lambda expressions! Syntax: 
+	 * a.yourfunc.fn("arg1", "arg2", _ != 0, _1 < _2)
+	 */
 	public macro static function fn<T, T2, T3, T4, T5>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5>, restArgs : Array<Expr>) 
 		return SlambdaMacro.f(fn, restArgs);
 }
 
 class Slambda4 {
+	/**
+	 * Lambda expressions! Syntax: 
+	 * a.yourfunc.fn("arg1", some.variable, _ != 0, _1 < _2, "final argument")
+	 */
 	public macro static function fn<T, T2, T3, T4, T5, T6>(fn : ExprOf<T -> T2 -> T3 -> T4 -> T5 -> T6>, restArgs : Array<Expr>) 
 		return SlambdaMacro.f(fn, restArgs);
 }

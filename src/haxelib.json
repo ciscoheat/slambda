@@ -1,10 +1,10 @@
 {
     "name": "slambda",
     "url": "https://github.com/ciscoheat/slambda",
-    "description": "Really Short Lambdas",
+    "description": "Short Lambda expressions in a tiny library",
     "license": "MIT",
-    "releasenote": "Only available on github right now",
+    "releasenote": "First haxelib release!",
     "contributors": ["ciscoheat"],
-    "version": "0.0.1",
+    "version": "0.8.0",
     "tags": ["lambda"]
 }
