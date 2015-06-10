@@ -137,7 +137,8 @@ class Tests extends BuddySuite
 			it("should detect underscore parameters inside strings", {
 				[1].map.fn('Test $_').should.containExactly(["Test 1"]);
 				[1].map.fn('<b>$_</b>')[0].should.be("<b>1</b>");
-				
+
+				fn('$$_1')().should.be("$_1");
 				fn('$_2$_1')("A", "B").should.be("BA");
 				fn( { var _2a = 2; '$_2a$_1'; } )("1").should.be("21");
 				fn("$_2$_1")().should.be("$_2$_1");
