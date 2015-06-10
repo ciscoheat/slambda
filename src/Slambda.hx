@@ -2,6 +2,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 
 using haxe.macro.ExprTools;
+using StringTools;
 
 // Auto-import Lambda when using Slambda
 typedef SlambdaLambda = Lambda;
@@ -69,6 +70,7 @@ private class SlambdaMacro {
 	}
 
 	static var underscoreParam = ~/^_\d*$/;
+	static var underscoreStringParam = ~/\$(_\d*)\b/;
 	static function createLambdaExpression(isExtension : Bool, e : Expr) : Expr {
 
 		// If no arrow syntax, detect underscore parameters.
@@ -78,6 +80,14 @@ private class SlambdaMacro {
 				var params = new Map<String, Expr>();
 				function findParams(e2 : Expr) {
 					switch e2.expr {
+						// Detect in single-quoted strings
+						case EConst(CString(s)) if(e2.toString().startsWith("'") && e2.toString().endsWith("'")): 
+							while (underscoreStringParam.match(s)) {
+								var m = underscoreStringParam.matched(1);
+								params.set(m, macro $i{m});
+								s = underscoreStringParam.matchedRight();
+							}
+							e2.iter(findParams);
 						case EConst(CIdent(v)) if (underscoreParam.match(v)):
 							params.set(v, e2);
 						case _:
@@ -87,6 +97,7 @@ private class SlambdaMacro {
 				findParams(e);
 
 				var paramArray = [for (p in params) p];
+				
 				if (paramArray.length > 0) {
 					// If underscore parameters found, create an arrow syntax of the expression.
 					// Sorted so the parameters are in the correct order in the function definition.

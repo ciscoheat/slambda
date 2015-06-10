@@ -132,7 +132,16 @@ class Tests extends BuddySuite
 				var emails = persons.filter.fn(_.email != null).map.fn(_.email);
 				
 				emails.should.containExactly(["a@example.com", "d@example.com"]);
-			});			
+			});
+			
+			it("should detect underscore parameters inside strings", {
+				[1].map.fn('Test $_').should.containExactly(["Test 1"]);
+				[1].map.fn('<b>$_</b>')[0].should.be("<b>1</b>");
+				
+				fn('$_2$_1')("A", "B").should.be("BA");
+				fn( { var _2a = 2; '$_2a$_1'; } )("1").should.be("21");
+				fn("$_2$_1")().should.be("$_2$_1");
+			});
 		});
 	}
 }

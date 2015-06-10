@@ -3,8 +3,8 @@
     "url": "https://github.com/ciscoheat/slambda",
     "description": "Short Lambda expressions in a tiny library",
     "license": "MIT",
-    "releasenote": "First haxelib release!",
+    "releasenote": "Now detects parameters inside strings.",
     "contributors": ["ciscoheat"],
-    "version": "0.8.0",
+    "version": "0.8.1",
     "tags": ["lambda"]
 }

@@ -39,6 +39,10 @@ class Main {
 		// Chainable
 		a = [1, 2, 3].filter.fn(_ > 1).filter.fn(y => y > 2);
 		trace(a); // [3]
+
+		// Works inside (single-quoted) strings too
+		a = [1].map.fn('<b>$_</b>');
+		trace(a); // ["<b>1</b>"]
 	}
 }
 ```
