@@ -82,7 +82,7 @@ class Tests extends BuddySuite
 				var e = [1, 2, 3].filter(fn(_ > 2));
 				e.should.containExactly([3]);
 
-				// Tests from thx.core/TestLambda
+				// Tests from thx.core
 				Assert.same([2,3], [1,2].map(fn(_+1)));
 
 				Assert.equals(0, fn((0))());
@@ -105,6 +105,12 @@ class Tests extends BuddySuite
 				Assert.equals(6, fn(_+_1+_2)(1,2,3));
 				Assert.equals(10, fn(_+_1+_2+_3)(1,2,3,4));
 				Assert.equals(15, fn(_+_1+_2+_3+_4)(1,2,3,4,5));				
+
+				Assert.same(["1","2"], [1,2].map.fn("" + _));
+				Assert.same(["1","2"], [1,2].map.fn('$_'));
+				Assert.same(["X1","X2"], [1,2].map.fn('X$_'));
+				Assert.same(["1X","2X"], [1,2].map.fn('${_}X'));
+				Assert.same(["X2X","X4X"], [1,2].map.fn('X${_*2}X'));
 			});
 
 			it("should work chained and without extension methods", {

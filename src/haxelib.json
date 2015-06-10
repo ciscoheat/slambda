@@ -3,8 +3,8 @@
     "url": "https://github.com/ciscoheat/slambda",
     "description": "Short Lambda expressions in a tiny library",
     "license": "MIT",
-    "releasenote": "Now handles escaped $ in single-quoted strings.",
+    "releasenote": "Complete string interpolation support.",
     "contributors": ["ciscoheat"],
-    "version": "0.8.2",
+    "version": "0.8.3",
     "tags": ["lambda"]
 }
