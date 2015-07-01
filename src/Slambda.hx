@@ -100,7 +100,7 @@ private class SlambdaMacro {
 					// If underscore parameters found, create an arrow syntax of the expression.
 					// Sorted so the parameters are in the correct order in the function definition.
 					paramArray.sort(function(x, y) return x.toString() > y.toString() ? 1 : 0);
-					e = macro $a{paramArray} => $e;
+					e = {expr: (macro $a{paramArray} => $e).expr, pos: e.pos};
 				}
 		}
 
@@ -117,7 +117,7 @@ private class SlambdaMacro {
 					expr: EFunction(null, {
 						ret: null,
 						params: [],
-						expr: macro return $e2,
+						expr: {expr: (macro return $e2).expr, pos: e.pos},
 						args: [for(arg in lambdaArgs) { name: arg, type: null, opt: false }]
 					}),
 					pos: e.pos
@@ -125,7 +125,7 @@ private class SlambdaMacro {
 
 			// If not an extension, it should return a non-lambda expression as a Void -> T function
 			// to stay consistent with fn("x") <-> function() return "x".
-			case _: isExtension ? e : macro function() return $e;
+			case _: isExtension ? e : {expr: (macro function() return $e).expr, pos: e.pos};
 		}
 	}
 }

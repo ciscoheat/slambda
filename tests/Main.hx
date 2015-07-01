@@ -149,6 +149,12 @@ class Tests extends BuddySuite
 				fn( { var _2a = 2; '$_2a$_1'; } )("1").should.be("21");
 				fn("$_2$_1")().should.be("$_2$_1");
 			});
+			
+			it("should handle nested lambda expressions properly", {
+				var output = [[1, 2], [3, 4], [5, 6], [7, 8]].filter.fn(_.exists.fn(_ == 5));
+				output.length.should.be(1);
+				output[0].should.containExactly([5, 6]);
+			});
 		});
 	}
 }
