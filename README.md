@@ -2,6 +2,8 @@
 
 Pronounced "slam-da", stands for Short Lambda. A tiny library that enables lambda expressions for [Haxe](http://haxe.org) in a simple way.
 
+**Deprecation notice:** With Haxe 4, this will be [built into the language](https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0002-arrow-functions.md). Please use it instead!
+
 Can be used with the common `=>` syntax, but also in a shorter format where `_` is assumed to be the first parameter. If more than one argument, use `_1` and `_2`, etc.
 
 ## Examples
